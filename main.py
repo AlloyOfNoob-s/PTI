@@ -66,4 +66,3 @@ bot = Bot()
 admin = Admin()
 login.show()
 app.exec()
-#change

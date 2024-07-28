@@ -56,7 +56,48 @@ class gamelist():
     def openweb(self,id):
         for i in self.list:
             if(id==i["id"]):
-                i.open()  
+                i.open()
+    def delete(self,id:int=None,name:str=None):
+        if id:
+            for game in self.list:
+                if(game["id"]==id):
+                    self.list.remove(game)
+                    self.savegame()
+                    break
+        elif name:
+            for game in self.list:
+                if(game["name"]==name):
+                    self.list.remove(game)
+                    self.savegame()
+                    break
+    def edit(self,tar:dict,id:int=None,name:str=None):
+        if id:
+            for game in self.list:
+                if(game["id"]==id):
+                    self.list.remove(game)
+                    self.add(tar=tar)
+                    break
+        elif name:
+            for game in self.list:
+                if(game["name"]==name):
+                    self.list.remove(game)
+                    self.add(tar=tar)
+                    break
+    def search(self,name):
+        done = []
+        for game in self.list:
+            if(name in game["name"]):
+                done.append(game)
+        return done
+    def sort(self)
+        done = self.list
+        Nc = True
+        while Nc:
+            Nc = False
+            for i in done:
+                if((i["name"])[0]>(done[done.index(i)+1]["name"])[0]):
+                    (i["name"])[0],(done[done.index(i)+1]["name"])[0] = (done[done.index(i)+1]["name"])[0],(i["name"])[0]
+                    Nc = True
 class game():
     def __init__(self,id,name,weblink):
         self.id = id
@@ -71,3 +112,5 @@ class acc():
         self.password = password
     def changepass(self,x):
         self.password = x
+l = gamelist()
+l.edit(game(10,"idk","idk"),id=2)
