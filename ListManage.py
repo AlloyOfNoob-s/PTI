@@ -98,6 +98,7 @@ class gamelist():
                 if((i["name"])[0]>(done[done.index(i)+1]["name"])[0]):
                     (i["name"])[0],(done[done.index(i)+1]["name"])[0] = (done[done.index(i)+1]["name"])[0],(i["name"])[0]
                     Nc = True
+        return done
 class game():
     def __init__(self,id,name,weblink):
         self.id = id
