@@ -89,7 +89,7 @@ class gamelist():
             if(name in game["name"]):
                 done.append(game)
         return done
-    def sort(self)
+    def sort(self):
         done = self.list
         Nc = True
         while Nc:
