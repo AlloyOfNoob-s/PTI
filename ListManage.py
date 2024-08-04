@@ -74,15 +74,14 @@ class gamelist():
         if id:
             for game in self.list:
                 if(game["id"]==id):
-                    self.list.remove(game)
-                    self.add(tar=tar)
+                    game = tar
                     break
         elif name:
             for game in self.list:
                 if(game["name"]==name):
-                    self.list.remove(game)
-                    self.add(tar=tar)
+                    game = tar
                     break
+        self.savegame()
     def search(self,name):
         done = []
         for game in self.list:
@@ -114,4 +113,3 @@ class acc():
     def changepass(self,x):
         self.password = x
 l = gamelist()
-l.edit(game(10,"idk","idk"),id=2)
