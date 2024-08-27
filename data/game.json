@@ -1,0 +1,14 @@
+[
+    {
+        "id": 0,
+        "name": "a",
+        "exedir": "game/example game/execute.exe",
+        "moddir": "blank"
+    },
+    {
+        "id": 4,
+        "name": "td",
+        "exedir": "game\\Lethal Company\\Lethal Company.exe",
+        "moddir": "none"
+    }
+]
