@@ -7,8 +7,8 @@
     },
     {
         "id": 4,
-        "name": "td",
-        "exedir": "game\\Lethal Company\\Lethal Company.exe",
+        "name": "example",
+        "exedir": "D:/Lethal Company/Lethal Company.exe",
         "moddir": "none"
     }
 ]

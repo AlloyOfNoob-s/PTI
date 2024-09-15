@@ -9,6 +9,8 @@ import PyQt6.QtWidgets
 from PyQt6 import QtCore
 from PyQt6 import QtWidgets,QtGui
 import os
+from AI import listen_and_speak,facerec
+from Thunderstoredownloader import main as Thunderstore
 alist =ListManage.acclist()
 glist =ListManage.gamelist()
 curid = 0
@@ -72,6 +74,9 @@ class Home(PyQt6.QtWidgets.QMainWindow,home.Ui_MainWindow):
         self.pushButton_4.pressed.connect(self.click4)
         self.lineEdit.textEdited.connect(self.Tsearch)
         self.b0.pressed.connect(self.se)
+        self.b1.pressed.connect(self.mod)
+    def mod(self):
+        QtUtility.change(self,mod)
     def afterinit(self):
         self.listWidget.clear()
         for item in glist.list:
@@ -113,6 +118,13 @@ class Login(PyQt6.QtWidgets.QMainWindow):
         uic.load_ui.loadUi("ui/login.ui",self)
         self.press0.clicked.connect(self.click0)
         self.press1.clicked.connect(self.click1)
+        self.pushButton.clicked.connect(self.face)
+    def face(self):
+        result = facerec.faceid(facerec.preimg())
+        if result:
+            QtUtility.change(self,home)
+        else:
+            QtUtility.mesc("Can't recognize face","error")
     def click0(self):
         if (self.p0.text()):
             if(alist.login(self.n0.text(),self.p0.text())):
@@ -128,7 +140,10 @@ class Signup(PyQt6.QtWidgets.QMainWindow):
         super().__init__()
         uic.load_ui.loadUi("ui/signup.ui",self)
         self.press0.clicked.connect(self.click0)
-        self.press1.clicked.connect(self.click1)        
+        self.press1.clicked.connect(self.click1)
+        self.pushButton.clicked.connect(self.face)
+    def face(self):
+        facerec.saveimg()
     def click0(self):
         if(self.n0.text() and self.p0.text() and self.p1.text()):
             if(self.p0.text()==self.p1.text()):
@@ -145,10 +160,16 @@ class selections(PyQt6.QtWidgets.QMainWindow,selection.Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.voice.pressed.connect(self.voices)
         self.b2.pressed.connect(self.click2)
+        self.b1.pressed.connect(self.mod)
         self.sor.pressed.connect(lambda: self.load("sort"))
         self.load("normal")
         self.search.textChanged.connect(lambda: self.load("search"))
+    def mod(self):
+        QtUtility.change(self,mod)
+    def voices(self):
+        self.search.setText(listen_and_speak.listen())
     def load(self,mode):
         for i in reversed(range(self.horizontalLayout.count())): 
             w=self.horizontalLayout.itemAt(i).widget()
@@ -306,18 +327,64 @@ class Mod(mod.Ui_MainWindow,PyQt6.QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-    def loadgame(self):
-        self.listWidget.clear()
+        self.b0.pressed.connect(self.select)
+        self.b2.pressed.connect(self.home)
+        self.load("null")
+    def home(self):
+        QtUtility.change(self,home)
+    def select(self):
+        QtUtility.change(self,Selection)
+    def load(self,mode):
+        for i in reversed(range(self.horizontalLayout.count())): 
+            w=self.horizontalLayout.itemAt(i).widget()
+            self.horizontalLayout.removeWidget(w)
+            w.setParent(None)
         for item in glist.list:
-            self.listWidget.addItem(str(item["id"])+" "+item["name"])
-    def loadfolder(self,dir):
-        self.listWidget_2.clear()
-        for item in os.listdir(dir):
-            self.listWidget_2.addItem(item)
-    def loaditem(self,dir):
-        self.listWidget_3.clear()
-        for item in os.listdir(dir):
-            self.listWidget_3.addItem(item)
+            parentdir = Path(item["exedir"])
+            parentdir = str(parentdir.parent.absolute())
+            self.widget_3 = QtWidgets.QWidget(parent=self.scrollAreaWidgetContents)
+            self.widget_3.setMinimumSize(QtCore.QSize(200, 500))
+            self.widget_3.setMaximumSize(QtCore.QSize(200, 500))
+            self.widget_3.setStyleSheet("background-color: rgb(170, 255, 255);")
+            self.widget_3.setObjectName("widget_3")
+            self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget_3)
+            self.verticalLayout_2.setObjectName("verticalLayout_2")
+            self.img = QtWidgets.QLabel(parent=self.widget_3)
+            self.img.setText("")
+            if(os.path.isfile(parentdir+"/icon.png")):
+                self.img.setPixmap(QtGui.QPixmap(parentdir+"/icon.png"))
+            else:
+                self.img.setPixmap(QtGui.QPixmap("img/null.png"))
+            self.img.setScaledContents(True)
+            self.img.setObjectName("img")
+            self.verticalLayout_2.addWidget(self.img)
+            self.n = QtWidgets.QLabel(parent=self.widget_3)
+            self.n.setMinimumSize(QtCore.QSize(0, 20))
+            self.n.setMaximumSize(QtCore.QSize(16777215, 30))
+            self.n.setStyleSheet("border-radius:5px;\n"
+    "border-color: rgb(255, 255, 255);\n"
+    "background-color: rgb(255, 255, 255);")
+            self.n.setObjectName("n")
+            self.verticalLayout_2.addWidget(self.n)
+            self.lineEdit = QtWidgets.QLineEdit(parent=self.widget_3)
+            self.lineEdit.setStyleSheet("border-radius:5px;\n"
+    "border-color: rgb(255, 255, 255);\n"
+    "background-color: rgb(255, 255, 255);")
+            self.lineEdit.setObjectName("lineEdit")
+            self.verticalLayout_2.addWidget(self.lineEdit)
+            self.pushButton = QtWidgets.QPushButton(parent=self.widget_3)
+            self.pushButton.setObjectName("pushButton")
+            self.verticalLayout_2.addWidget(self.pushButton)
+            self.horizontalLayout.addWidget(self.widget_3)
+            self.n.setText(item["name"])
+            self.lineEdit.setPlaceholderText("Enter thunderbolt link as format [by]-[name]-[version]")
+            self.pushButton.setText("Install Mod")
+            if(os.path.isfile(item["exedir"])):
+                    print("run")
+                    self.pushButton.clicked.connect(lambda: self.run(item["exedir"]))
+    def run(self,dir):
+        dir = os.path.dirname(dir)
+        Thunderstore._download_and_install_mod()
 app = PyQt6.QtWidgets.QApplication(sys.argv)
 home = Home()
 login = Login()

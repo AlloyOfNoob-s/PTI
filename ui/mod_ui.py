@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'c:\Users\Acer\Desktop\PTI\ui\seletion.ui'
+# Form implementation generated from reading ui file 'c:\Users\Acer\Desktop\PTI\ui\mod.ui'
 #
 # Created by: PyQt6 UI code generator 6.7.1
 #
@@ -88,15 +88,12 @@ class Ui_MainWindow(object):
 "background-color: rgb(255, 255, 255);")
         self.n.setObjectName("n")
         self.verticalLayout_2.addWidget(self.n)
-        self.dir = QtWidgets.QLabel(parent=self.widget_3)
-        self.dir.setMinimumSize(QtCore.QSize(0, 20))
-        self.dir.setMaximumSize(QtCore.QSize(16777215, 90))
-        self.dir.setStyleSheet("border-radius:5px;\n"
+        self.lineEdit = QtWidgets.QLineEdit(parent=self.widget_3)
+        self.lineEdit.setStyleSheet("border-radius:5px;\n"
 "border-color: rgb(255, 255, 255);\n"
 "background-color: rgb(255, 255, 255);")
-        self.dir.setWordWrap(True)
-        self.dir.setObjectName("dir")
-        self.verticalLayout_2.addWidget(self.dir)
+        self.lineEdit.setObjectName("lineEdit")
+        self.verticalLayout_2.addWidget(self.lineEdit)
         self.pushButton = QtWidgets.QPushButton(parent=self.widget_3)
         self.pushButton.setObjectName("pushButton")
         self.verticalLayout_2.addWidget(self.pushButton)
@@ -141,8 +138,8 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.n.setText(_translate("MainWindow", "Haneko\'s late homework"))
-        self.dir.setText(_translate("MainWindow", "C:/Users/Acer/Desktop/PTI/game/example game"))
-        self.pushButton.setText(_translate("MainWindow", "run"))
+        self.lineEdit.setPlaceholderText(_translate("MainWindow", "Enter thunderbolt link"))
+        self.pushButton.setText(_translate("MainWindow", "Install Mod"))
         self.sor.setText(_translate("MainWindow", "sort"))
         self.label.setText(_translate("MainWindow", "search"))
         self.voice.setText(_translate("MainWindow", "Voice"))

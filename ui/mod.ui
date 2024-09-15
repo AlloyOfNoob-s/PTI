@@ -183,36 +183,21 @@ background-color: rgb(255, 255, 255);</string>
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="dir">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>20</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>90</height>
-              </size>
-             </property>
+            <widget class="QLineEdit" name="lineEdit">
              <property name="styleSheet">
               <string notr="true">border-radius:5px;
 border-color: rgb(255, 255, 255);
 background-color: rgb(255, 255, 255);</string>
              </property>
-             <property name="text">
-              <string>C:/Users/Acer/Desktop/PTI/game/example game</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
+             <property name="placeholderText">
+              <string>Enter thunderbolt link</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QPushButton" name="pushButton">
              <property name="text">
-              <string>run</string>
+              <string>Install Mod</string>
              </property>
             </widget>
            </item>
