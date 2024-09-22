@@ -284,6 +284,16 @@ border-color: rgb(152, 255, 255);</string>
         </widget>
        </item>
        <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>IMPORTANT: this thing wont install modloader or the mod that the mod you're installing need</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>

@@ -3,6 +3,7 @@ import sys
 import PyQt6
 import ListManage
 import QtUtility
+from requests import Session
 from uipy import home,add_change,selection,mod
 from PyQt6 import uic
 import PyQt6.QtWidgets
@@ -327,9 +328,14 @@ class Mod(mod.Ui_MainWindow,PyQt6.QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.voice.pressed.connect(self.voices)
         self.b0.pressed.connect(self.select)
         self.b2.pressed.connect(self.home)
-        self.load("null")
+        self.sor.pressed.connect(lambda: self.load("sort"))
+        self.load("normal")
+        self.search.textChanged.connect(lambda: self.load("search"))
+    def voices(self):
+        self.search.setText(listen_and_speak.listen())
     def home(self):
         QtUtility.change(self,home)
     def select(self):
@@ -339,52 +345,144 @@ class Mod(mod.Ui_MainWindow,PyQt6.QtWidgets.QMainWindow):
             w=self.horizontalLayout.itemAt(i).widget()
             self.horizontalLayout.removeWidget(w)
             w.setParent(None)
-        for item in glist.list:
-            parentdir = Path(item["exedir"])
-            parentdir = str(parentdir.parent.absolute())
-            self.widget_3 = QtWidgets.QWidget(parent=self.scrollAreaWidgetContents)
-            self.widget_3.setMinimumSize(QtCore.QSize(200, 500))
-            self.widget_3.setMaximumSize(QtCore.QSize(200, 500))
-            self.widget_3.setStyleSheet("background-color: rgb(170, 255, 255);")
-            self.widget_3.setObjectName("widget_3")
-            self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget_3)
-            self.verticalLayout_2.setObjectName("verticalLayout_2")
-            self.img = QtWidgets.QLabel(parent=self.widget_3)
-            self.img.setText("")
-            if(os.path.isfile(parentdir+"/icon.png")):
-                self.img.setPixmap(QtGui.QPixmap(parentdir+"/icon.png"))
-            else:
-                self.img.setPixmap(QtGui.QPixmap("img/null.png"))
-            self.img.setScaledContents(True)
-            self.img.setObjectName("img")
-            self.verticalLayout_2.addWidget(self.img)
-            self.n = QtWidgets.QLabel(parent=self.widget_3)
-            self.n.setMinimumSize(QtCore.QSize(0, 20))
-            self.n.setMaximumSize(QtCore.QSize(16777215, 30))
-            self.n.setStyleSheet("border-radius:5px;\n"
-    "border-color: rgb(255, 255, 255);\n"
-    "background-color: rgb(255, 255, 255);")
-            self.n.setObjectName("n")
-            self.verticalLayout_2.addWidget(self.n)
-            self.lineEdit = QtWidgets.QLineEdit(parent=self.widget_3)
-            self.lineEdit.setStyleSheet("border-radius:5px;\n"
-    "border-color: rgb(255, 255, 255);\n"
-    "background-color: rgb(255, 255, 255);")
-            self.lineEdit.setObjectName("lineEdit")
-            self.verticalLayout_2.addWidget(self.lineEdit)
-            self.pushButton = QtWidgets.QPushButton(parent=self.widget_3)
-            self.pushButton.setObjectName("pushButton")
-            self.verticalLayout_2.addWidget(self.pushButton)
-            self.horizontalLayout.addWidget(self.widget_3)
-            self.n.setText(item["name"])
-            self.lineEdit.setPlaceholderText("Enter thunderbolt link as format [by]-[name]-[version]")
-            self.pushButton.setText("Install Mod")
-            if(os.path.isfile(item["exedir"])):
-                    print("run")
-                    self.pushButton.clicked.connect(lambda: self.run(item["exedir"]))
-    def run(self,dir):
+        if(mode =="normal"):
+            for item in glist.list:
+                parentdir = Path(item["exedir"])
+                parentdir = str(parentdir.parent.absolute())
+                self.widget_3 = QtWidgets.QWidget(parent=self.scrollAreaWidgetContents)
+                self.widget_3.setMinimumSize(QtCore.QSize(200, 500))
+                self.widget_3.setMaximumSize(QtCore.QSize(200, 500))
+                self.widget_3.setStyleSheet("background-color: rgb(170, 255, 255);")
+                self.widget_3.setObjectName("widget_3")
+                self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget_3)
+                self.verticalLayout_2.setObjectName("verticalLayout_2")
+                self.img = QtWidgets.QLabel(parent=self.widget_3)
+                self.img.setText("")
+                if(os.path.isfile(parentdir+"/icon.png")):
+                    self.img.setPixmap(QtGui.QPixmap(parentdir+"/icon.png"))
+                else:
+                    self.img.setPixmap(QtGui.QPixmap("img/null.png"))
+                self.img.setScaledContents(True)
+                self.img.setObjectName("img")
+                self.verticalLayout_2.addWidget(self.img)
+                self.n = QtWidgets.QLabel(parent=self.widget_3)
+                self.n.setMinimumSize(QtCore.QSize(0, 20))
+                self.n.setMaximumSize(QtCore.QSize(16777215, 30))
+                self.n.setStyleSheet("border-radius:5px;\n"
+        "border-color: rgb(255, 255, 255);\n"
+        "background-color: rgb(255, 255, 255);")
+                self.n.setObjectName("n")
+                self.verticalLayout_2.addWidget(self.n)
+                self.lineEdit = QtWidgets.QLineEdit(parent=self.widget_3)
+                self.lineEdit.setStyleSheet("border-radius:5px;\n"
+        "border-color: rgb(255, 255, 255);\n"
+        "background-color: rgb(255, 255, 255);")
+                self.lineEdit.setObjectName("lineEdit")
+                self.verticalLayout_2.addWidget(self.lineEdit)
+                self.pushButton = QtWidgets.QPushButton(parent=self.widget_3)
+                self.pushButton.setObjectName("pushButton")
+                self.verticalLayout_2.addWidget(self.pushButton)
+                self.horizontalLayout.addWidget(self.widget_3)
+                self.n.setText(item["name"])
+                self.lineEdit.setPlaceholderText("[by]-[name]-[version]")
+                self.pushButton.setText("Install Mod")
+                if(os.path.isfile(item["exedir"])):
+                        print("run")
+                        self.pushButton.clicked.connect(lambda: self.run(item["exedir"],self.lineEdit.text()))
+        elif(mode == "sort"):
+            for item in glist.sort():
+                parentdir = Path(item["exedir"])
+                parentdir = str(parentdir.parent.absolute())
+                self.widget_3 = QtWidgets.QWidget(parent=self.scrollAreaWidgetContents)
+                self.widget_3.setMinimumSize(QtCore.QSize(200, 500))
+                self.widget_3.setMaximumSize(QtCore.QSize(200, 500))
+                self.widget_3.setStyleSheet("background-color: rgb(170, 255, 255);")
+                self.widget_3.setObjectName("widget_3")
+                self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget_3)
+                self.verticalLayout_2.setObjectName("verticalLayout_2")
+                self.img = QtWidgets.QLabel(parent=self.widget_3)
+                self.img.setText("")
+                if(os.path.isfile(parentdir+"/icon.png")):
+                    self.img.setPixmap(QtGui.QPixmap(parentdir+"/icon.png"))
+                else:
+                    self.img.setPixmap(QtGui.QPixmap("img/null.png"))
+                self.img.setScaledContents(True)
+                self.img.setObjectName("img")
+                self.verticalLayout_2.addWidget(self.img)
+                self.n = QtWidgets.QLabel(parent=self.widget_3)
+                self.n.setMinimumSize(QtCore.QSize(0, 20))
+                self.n.setMaximumSize(QtCore.QSize(16777215, 30))
+                self.n.setStyleSheet("border-radius:5px;\n"
+        "border-color: rgb(255, 255, 255);\n"
+        "background-color: rgb(255, 255, 255);")
+                self.n.setObjectName("n")
+                self.verticalLayout_2.addWidget(self.n)
+                self.lineEdit = QtWidgets.QLineEdit(parent=self.widget_3)
+                self.lineEdit.setStyleSheet("border-radius:5px;\n"
+        "border-color: rgb(255, 255, 255);\n"
+        "background-color: rgb(255, 255, 255);")
+                self.lineEdit.setObjectName("lineEdit")
+                self.verticalLayout_2.addWidget(self.lineEdit)
+                self.pushButton = QtWidgets.QPushButton(parent=self.widget_3)
+                self.pushButton.setObjectName("pushButton")
+                self.verticalLayout_2.addWidget(self.pushButton)
+                self.horizontalLayout.addWidget(self.widget_3)
+                self.n.setText(item["name"])
+                self.lineEdit.setPlaceholderText("[by]-[name]-[version]")
+                self.pushButton.setText("Install Mod")
+                if(os.path.isfile(item["exedir"])):
+                        print("run")
+                        self.pushButton.clicked.connect(lambda: self.run(item["exedir"],self.lineEdit.text()))
+        elif(mode == "search"):
+            for item in glist.search(self.search.text()):
+                parentdir = Path(item["exedir"])
+                parentdir = str(parentdir.parent.absolute())
+                self.widget_3 = QtWidgets.QWidget(parent=self.scrollAreaWidgetContents)
+                self.widget_3.setMinimumSize(QtCore.QSize(200, 500))
+                self.widget_3.setMaximumSize(QtCore.QSize(200, 500))
+                self.widget_3.setStyleSheet("background-color: rgb(170, 255, 255);")
+                self.widget_3.setObjectName("widget_3")
+                self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget_3)
+                self.verticalLayout_2.setObjectName("verticalLayout_2")
+                self.img = QtWidgets.QLabel(parent=self.widget_3)
+                self.img.setText("")
+                if(os.path.isfile(parentdir+"/icon.png")):
+                    self.img.setPixmap(QtGui.QPixmap(parentdir+"/icon.png"))
+                else:
+                    self.img.setPixmap(QtGui.QPixmap("img/null.png"))
+                self.img.setScaledContents(True)
+                self.img.setObjectName("img")
+                self.verticalLayout_2.addWidget(self.img)
+                self.n = QtWidgets.QLabel(parent=self.widget_3)
+                self.n.setMinimumSize(QtCore.QSize(0, 20))
+                self.n.setMaximumSize(QtCore.QSize(16777215, 30))
+                self.n.setStyleSheet("border-radius:5px;\n"
+        "border-color: rgb(255, 255, 255);\n"
+        "background-color: rgb(255, 255, 255);")
+                self.n.setObjectName("n")
+                self.verticalLayout_2.addWidget(self.n)
+                self.lineEdit = QtWidgets.QLineEdit(parent=self.widget_3)
+                self.lineEdit.setStyleSheet("border-radius:5px;\n"
+        "border-color: rgb(255, 255, 255);\n"
+        "background-color: rgb(255, 255, 255);")
+                self.lineEdit.setObjectName("lineEdit")
+                self.verticalLayout_2.addWidget(self.lineEdit)
+                self.pushButton = QtWidgets.QPushButton(parent=self.widget_3)
+                self.pushButton.setObjectName("pushButton")
+                self.verticalLayout_2.addWidget(self.pushButton)
+                self.horizontalLayout.addWidget(self.widget_3)
+                self.n.setText(item["name"])
+                self.lineEdit.setPlaceholderText("[by]-[name]-[version]")
+                self.pushButton.setText("Install Mod")
+                if(os.path.isfile(item["exedir"])):
+                        print("run")
+                        self.pushButton.clicked.connect(lambda: self.run(item["exedir"],self.lineEdit.text()))
+    def run(self,dir,out:str):
         dir = os.path.dirname(dir)
-        Thunderstore._download_and_install_mod()
+        print(dir)
+        by,name,ver = out.split("-")
+        mod_install = Thunderstore.Mod(by,name,ver)
+        Thunderstore._download_and_install_mod(mod_install,dir,Session())
 app = PyQt6.QtWidgets.QApplication(sys.argv)
 home = Home()
 login = Login()
