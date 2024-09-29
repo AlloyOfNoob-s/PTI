@@ -8,7 +8,13 @@
     {
         "id": 4,
         "name": "example",
-        "exedir": "D:/Lethal Company/Lethal Company.exe",
+        "exedir": "C:\\Lethal Company\\Lethal Company.exe",
         "moddir": "none"
+    },
+    {
+        "id": 5,
+        "name": "AASD",
+        "exedir": "ASD",
+        "moddir": "ASD"
     }
 ]

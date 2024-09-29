@@ -19,7 +19,6 @@ def saveimg():
         return "AI/saved_face/"+timestamp+".jpg"
 def preimg():
     cam = cv2.VideoCapture(0)
-
     if(not cam.isOpened()):
         print("Cannot open camera")
         return

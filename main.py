@@ -10,6 +10,7 @@ import PyQt6.QtWidgets
 from PyQt6 import QtCore
 from PyQt6 import QtWidgets,QtGui
 import os
+import shutil
 from AI import listen_and_speak,facerec
 from Thunderstoredownloader import main as Thunderstore
 alist =ListManage.acclist()
@@ -480,9 +481,14 @@ class Mod(mod.Ui_MainWindow,PyQt6.QtWidgets.QMainWindow):
     def run(self,dir,out:str):
         dir = os.path.dirname(dir)
         print(dir)
-        by,name,ver = out.split("-")
-        mod_install = Thunderstore.Mod(by,name,ver)
-        Thunderstore._download_and_install_mod(mod_install,dir,Session())
+        try:
+            by,name,ver = out.split("-")
+            mod_install = Thunderstore.Mod(by,name,ver)
+            Thunderstore._download_and_install_mod(mod_install,dir,Session())
+            shutil.rmtree(out)
+            QtUtility.mesc(out+"success","done")
+        except:
+            QtUtility.mesc("wrong format","error")
 app = PyQt6.QtWidgets.QApplication(sys.argv)
 home = Home()
 login = Login()

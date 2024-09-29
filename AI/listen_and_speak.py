@@ -8,10 +8,10 @@ def speak(text:str):
 
 def listen()->str:
     try:
-        with speech_recognition.Microphone() as mic:
+        with speech_recognition.Microphone(0) as mic:
             print("successfully init microphone!")
-            print(type(mic))
             user_input = ear.listen(mic,timeout=2,phrase_time_limit=2)
+            print("got sound")
             text = ear.recognize_google(user_input)
             text = text.lower()
             return text
@@ -19,4 +19,5 @@ def listen()->str:
         return ""
     except speech_recognition.RequestError:
         return ""
-print(listen())
+    except speech_recognition.WaitTimeoutError:
+        return ""
